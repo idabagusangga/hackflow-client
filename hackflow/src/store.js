@@ -12,7 +12,8 @@ export default new Vuex.Store({
     questions: [],
     activeQuestion: null,
     answers: [],
-    loadingForm: false
+    loadingForm: false,
+    registermsg: ''
   },
   mutations: {
     SET_LOADING_FORM (state, payload) {
@@ -101,11 +102,14 @@ export default new Vuex.Store({
     },
     POST_NEW_ANSWER (state, payload) {
       state.answers.unshift(payload)
+    },
+    REGISTER_MSG (state, payload) {
+      state.registermsg = payload
     }
   },
   actions: {
     login ({ commit }, payload) {
-      axios.post('http://localhost:3000/users/login', payload)
+      axios.post('http://35.187.226.54:3000/users/login', payload)
         .then(response => {
           console.log(response.data)
           localStorage.setItem('token', response.data.token)
@@ -116,7 +120,7 @@ export default new Vuex.Store({
         })
     },
     getAllQuestions ({commit}, payload) {
-      axios.get('http://localhost:3000/questions')
+      axios.get('http://35.187.226.54:3000/questions')
         .then(response => {
           console.log(response)
           commit('SET_QUESTIONS', response.data.data)
@@ -129,7 +133,7 @@ export default new Vuex.Store({
       let token = localStorage.getItem('token')
       if (token) {
         console.log('masuk if')
-        axios.post(`http://localhost:3000/questions/upvote/${payload}`, {token: token})
+        axios.post(`http://35.187.226.54:3000/questions/upvote/${payload}`, {token: token})
           .then(response => {
             commit('SET_UPVOTE_QUESTION', payload)
             console.log(response)
@@ -145,7 +149,7 @@ export default new Vuex.Store({
     downvoteQuestion ({ commit }, payload) {
       let token = localStorage.getItem('token')
       if (token) {
-        axios.post(`http://localhost:3000/questions/downvote/${payload}`, {token: token})
+        axios.post(`http://35.187.226.54:3000/questions/downvote/${payload}`, {token: token})
           .then(response => {
             commit('SET_DOWNVOTE_QUESTION', payload)
             console.log(response)
@@ -158,7 +162,7 @@ export default new Vuex.Store({
       }
     },
     findOneQuestion ({ commit }, payload) {
-      axios.get(`http://localhost:3000/questions/${payload}`)
+      axios.get(`http://35.187.226.54:3000/questions/${payload}`)
         .then(response => {
           console.log(response)
           commit('SET_ACTIVE_QUESTION', response.data.data)
@@ -168,7 +172,7 @@ export default new Vuex.Store({
         })
     },
     getAllAnswers ({ commit }, payload) {
-      axios.get(`http://localhost:3000/answers/${payload}`)
+      axios.get(`http://35.187.226.54:3000/answers/${payload}`)
         .then(response => {
           console.log(response.data.data)
           commit('SET_ANSWERS', response.data.data)
@@ -181,7 +185,7 @@ export default new Vuex.Store({
       let token = localStorage.getItem('token')
       if (token) {
         console.log('masuk if')
-        axios.post(`http://localhost:3000/answers/upvote/${payload}`, {token: token})
+        axios.post(`http://35.187.226.54:3000/answers/upvote/${payload}`, {token: token})
           .then(response => {
             commit('SET_UPVOTE_ANSWERS', payload)
             console.log(response)
@@ -197,7 +201,7 @@ export default new Vuex.Store({
     downvoteAnswer ({ commit }, payload) {
       let token = localStorage.getItem('token')
       if (token) {
-        axios.post(`http://localhost:3000/answers/downvote/${payload}`, {token: token})
+        axios.post(`http://35.187.226.54:3000/answers/downvote/${payload}`, {token: token})
           .then(response => {
             commit('SET_DOWNVOTE_ANSWERS', payload)
             console.log(response)
@@ -210,7 +214,7 @@ export default new Vuex.Store({
       }
     },
     postQuestion ({ commit }, payload) {
-      axios.post(`http://localhost:3000/questions`, payload)
+      axios.post(`http://35.187.226.54:3000/questions`, payload)
         .then(response => {
           commit('POST_NEW_QUESTION', response.data.data)
         })
@@ -219,9 +223,18 @@ export default new Vuex.Store({
         })
     },
     postAnswer ({ commit }, payload) {
-      axios.post(`http://localhost:3000/answers`, payload)
+      axios.post(`http://35.187.226.54:3000/answers`, payload)
         .then(response => {
           commit('POST_NEW_ANSWER', response.data.data)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    register ({ commit }, payload) {
+      axios.post(`http://35.187.226.54:3000/users/register`, payload)
+        .then(response => {
+          commit('REGISTER MSG', 'user created please log in')
         })
         .catch(err => {
           console.log(err)

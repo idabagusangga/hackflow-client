@@ -5,6 +5,7 @@
 
     <v-container fluid>
       <div id="headerCss" class="border-info">
+      <h3>{{registerMsg}}</h3>
                   <h3>Login</h3>
       </div>
 
@@ -34,15 +35,15 @@
 
 
     </v-layout>
-    <h6>Dont have an account?<a href="#"> Register</a></h6>
+    <h6>Dont have an account?<a @click="register" style="cursor:pointer;"> Register</a></h6>
 
   <button type="button" class="btn btn-outline-secondary" @click="loginButton">Login</button>
   <button type="button" class="btn btn-outline-info">Facebook</button>
 
 
 
-    
-    
+
+
       </v-container>
       </div>
 
@@ -63,11 +64,19 @@ export default {
   methods: {
     loginButton () {
       this.$store.dispatch('login', {email: this.email, password: this.passwordUser})
+    },
+    register () {
+      this.$store.dispatch('register', {email: this.email, password: this.passwordUser})
+      this.email = ''
+      this.passwordUser = ''
     }
   },
   computed: {
     loginState () {
       return this.$store.state.isLoggedIn
+    },
+    registerMsg () {
+      return this.$store.state.registermsg
     }
   }
 }
@@ -76,7 +85,7 @@ export default {
 <style lang="css">
 .loginArea {
   margin-left: 15px;
-  background-color: 
+  background-color:
 }
 #talkbubble {
    width: 450px;
